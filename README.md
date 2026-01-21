@@ -1,12 +1,13 @@
 Set-Content -Path README.md -Value @"
 # 🛡️ Automated Multimodal AI Policy Auditor
 
-A local-first **'Compliance-as-Code'** agent that audits user prompts, model outputs, PDFs, and images against **EU AI Act** safety standards.
+A local-first **'Compliance-as-Code'** agent that audits user prompts, model outputs, PDFs, and images against **EU AI Act** safety standards. 
+* [NOTE]: This is just a demo, as such the entirety of the EU AI Act is not integrated into the Policy Auditor (just enough to show proof of concept)
 
 ---
 
 ## 📋 Executive Summary
-As AI adoption accelerates, manual compliance auditing becomes a bottleneck. This tool automates the **Safety Audit** phase of LLM deployment. It uses a local **RAG (Retrieval-Augmented Generation)** architecture to cross-reference inputs against a vectorised version of the **EU AI Act** and internal safety policies.
+As AI adoption accelerates, manual compliance auditing becomes a bottleneck. This tool automates the **Safety Audit** phase of LLM deployment. It uses a local **RAG (Retrieval-Augmented Generation)** architecture to cross-reference inputs against a vectorised version of the **EU AI Act** and internal safety policies. It is meant for assisting human review of prompts (Text) inputs and model outputs (Text, Image, Files) by providing a inital assessment on whether the content violates the EU AI act, and if so, provide a breif reasoning + relevant sections of the act. 
 
 **Key Differentiator:** The entire stack runs **100% locally** (using Ollama), ensuring no sensitive audit data leaves the secure environment.
 
@@ -26,12 +27,12 @@ As AI adoption accelerates, manual compliance auditing becomes a bottleneck. Thi
 ## 📂 Directory Structure
 
 ai-safety-auditor/
-├── app.py                 # Main application logic (Streamlit frontend)
-├── create_db.py           # Script to vectorise safety rules into FAISS
-├── safety_policy.txt      # The source of truth (Rules & Standards)
-├── requirements.txt       # Python dependencies
-├── README.md              # Documentation
-└── faiss_index/           # (Generated) Local vector database folder
+* ├── app.py                 - # Main application logic (Streamlit frontend)
+* ├── create_db.py           - # Script to vectorise safety rules into FAISS
+* ├── safety_policy.txt      - # The source of truth (Rules & Standards)
+* ├── requirements.txt       - # Python dependencies
+* ├── README.md              - # Documentation
+* └── faiss_index/           - # (Generated) Local vector database folder
 
 
 ---
@@ -109,11 +110,18 @@ The system audits against `safety_policy.txt`. To update the logic, edit this te
 * **Age Appropriateness:** U18 restrictions.
 
 ---
+## ⚠️ Limitations & Ethical Considerations
+* **False Negatives:** Smaller local models (Llama 3 8B) may miss nuanced "dog-whistles" or context-dependent hate speech that larger frontier models would catch.
+* **Hallucination Risk:** The RAG retrieval ensures the *policy* is cited correctly, but the model may occasionally misinterpret the user's intent.
+* **Operational Role:** This tool is designed as a **"Pre-Screening"** layer to filter obvious violations. It does not replace human judgment for edge cases (e.g., satire or educational context).
 
+---
 ## 🔮 Future Roadmap
 * [ ] **Audio Auditing:** Integrate Whisper model for auditing voice logs.
 * [ ] **CI/CD Integration:** Convert `app.py` logic into a FastAPI endpoint for automated pipeline checks.
 * [ ] **JSON Output:** Standardize logs for Splunk/Datadog integration.
+* [ ] **Jira/Zendesk Integration:** Automatically create a ticket when a "High Risk" violation is detected.
+* [ ] **Feedback Loop:** Add a "Thumbs Up/Down" button in the UI to collect human feedback for Fine-Tuning (RLHF).
 
 ---
 
